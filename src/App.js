@@ -1,25 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import { Input } from 'antd';
+const { TextArea } = Input;
 
-function App() {
+const App = () => {
+  const [value, setValue] = useState('');
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <TextArea placeholder="Autosize height based on content lines" autoSize />
+      <div
+        style={{
+          margin: '24px 0',
+        }}
+      />
+      <TextArea
+        placeholder="Autosize height with minimum and maximum number of lines"
+        autoSize={{
+          minRows: 2,
+          maxRows: 6,
+        }}
+      />
+      <div
+        style={{
+          margin: '24px 0',
+        }}
+      />
+      <TextArea
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        placeholder="Controlled autosize"
+        autoSize={{
+          minRows: 3,
+          maxRows: 5,
+        }}
+      />
+    </>
   );
-}
-
+};
 export default App;
