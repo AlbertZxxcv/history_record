@@ -36,3 +36,20 @@
     transform: rotate(360deg);
   }
 }
+
+.two-time-lines{
+  display: flex;
+  flex-direction: row;
+}
+
+.time-line{
+  margin-left: 20%;
+}
+
+.one-time-line{
+  margin-left: 40%;
+}
+
+.history-card{
+  max-width: 300px;
+}
