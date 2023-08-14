@@ -55,6 +55,15 @@
   margin-bottom: 36px;
 }
 
+@media (max-width: 786px) {
+  .btn-modal {
+    /* 在窗口宽度小于786px时的样式 */
+    margin-left: 10px; /* 修改为适合的值 */
+    margin-right: 10px; /* 修改为适合的值 */
+    /* 其他样式 */
+  }
+}
+
 .two-time-lines-web{
   display: flex;
   flex-direction: row;
