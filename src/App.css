@@ -54,19 +54,18 @@
 .history-card{
   display: flex;
   flex-direction: column;
-  width: 300px;
+  width: 250px;
   text-align: left;
 }
 
 .history-card-left{
   display: flex;
   flex-direction: column;
-  width: 300px;
+  width: 250px;
   text-align: left;
 
   background-color: red;
   color: white;
-  width: 300px;
   margin-right: 20%;
 }
 
