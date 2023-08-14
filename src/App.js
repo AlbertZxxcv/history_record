@@ -255,19 +255,19 @@ const App = () => {
       </div>
       {(screenWidth <= 768) && (
         <Timeline
-          className='one-time-line'
+          className='one-time-line-mobile'
           items={historys}
         />
       )}
       {(screenWidth > 768 && historys.length < 10) && (
         <Timeline
-          className='one-time-line'
+          className='one-time-line-web'
           mode="alternate"
           items={historys}
         />
       )}
       {(screenWidth > 768 && historys.length >= 10) && (
-        <div className='two-time-lines'>
+        <div className='two-time-lines-web'>
           <Timeline
             className='two-time-line'
             mode="alternate"

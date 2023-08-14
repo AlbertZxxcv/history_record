@@ -37,36 +37,39 @@
   }
 }
 
-.two-time-lines{
+.two-time-lines-web{
   display: flex;
   flex-direction: row;
-  flex: 1;
 }
 
 .two-time-line{
-  margin-left: 20%;
+  margin-left: 5%;
 }
 
-.one-time-line{
-  margin-left: 40%;
+.one-time-line-web{
+  margin-left: 10%;
+  margin-right: 20%;
+}
+
+.one-time-line-mobile{
+  margin-left: 5%;
+  margin-right: 5%;
 }
 
 .history-card{
   display: flex;
   flex-direction: column;
-  width: 250px;
   text-align: left;
 }
 
 .history-card-left{
   display: flex;
   flex-direction: column;
-  width: 250px;
   text-align: left;
 
+  margin: 0;
   background-color: red;
   color: white;
-  margin-right: 20%;
 }
 
 .card-line{
