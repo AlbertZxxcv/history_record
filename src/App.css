@@ -37,13 +37,33 @@
   }
 }
 
+.header-with-background {
+  background: linear-gradient(to right, #FF6B6B, #355C7D); /* 使用渐变背景 */
+  color: white;
+  text-align: center;
+  margin-bottom: 20px;
+  margin-top: 0;
+}
+
+.header-with-background h1{
+  margin: 0;
+}
+
+.btn-modal{
+  margin-top: 20px;
+  margin-left: 40%;
+  margin-bottom: 36px;
+}
+
 .two-time-lines-web{
   display: flex;
   flex-direction: row;
+  margin-left: 5%;
 }
 
 .two-time-line{
-  margin-left: 5%;
+  flex: 1;
+  margin-right: 5%;
 }
 
 .one-time-line-web{

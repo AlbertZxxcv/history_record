@@ -1,22 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { Input, Button, Timeline, Modal, Card } from 'antd';
+import { Input, Button, Timeline, Modal, Card, Layout, Checkbox, Radio} from 'antd';
 import axios from 'axios';
 import './App.css'; // 导入外部的 CSS 文件
+
+const { Header } = Layout;
+
 
 const { TextArea } = Input;
 const App = () => {
   const [historyRecords, setHistoryRecords] = useState([]);
   const [historyDivFormat, sethistoryDivFormat] = useState(new Map());
+  // important
+  const [important, setImportant] = useState(0);
+  const [whichhistory, setWhichhistory] = useState('china');
+  const [selectedCountryValue, setSelectedCountryValue] = useState('china');
 
   const [year, setYear] = useState('');
   const [name, setName] = useState('');
-
   const [cause, setCause] = useState('');
   const [event, setEvent] = useState('');
   const [influnce, setInflunce] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalTitle, setModalTitle] = useState('新建历史事件')
   const [eventId, setEventID] = useState();
+
   const [screenWidth] = useState(window.innerWidth)
 
   const showModal = () => {
@@ -26,6 +33,9 @@ const App = () => {
     setCause('');
     setEvent('');
     setInflunce('');
+
+    setImportant(0)
+    setSelectedCountryValue('china')
     setIsModalVisible(true);
   };
   const showModifyModal = (history) => {
@@ -36,6 +46,9 @@ const App = () => {
     setCause(history.EventCause);
     setEvent(history.Event);
     setInflunce(history.EventInfluence);
+
+    setImportant(history.important)
+    setSelectedCountryValue(history.country)
     setIsModalVisible(true);
   }
 
@@ -45,8 +58,16 @@ const App = () => {
 
 
   function getCurrent() {
+    let requestLink = ('http://3.23.99.16:4000/history_records')
+    if (whichhistory === 'china'){
+      requestLink = ('http://3.23.99.16:4000/chinese_history')
+    }else if(whichhistory === 'world'){
+      requestLink = ('http://3.23.99.16:4000/world_history')
+    }else{
+      requestLink = ('http://3.23.99.16:4000/history_records')
+    }
     // 发送GET请求
-    axios.get('http://3.23.99.16:4000/history_records', {
+    axios.get(requestLink, {
       headers: {
         'Access-Control-Allow-Origin': '*' // 仅在开发中使用，生产环境需要设置具体的允许域名
       }
@@ -63,7 +84,7 @@ const App = () => {
   }
 
   useEffect(() => {
-    console.log('useEffect getCurrent');
+    console.log('useEffect begining');
     getCurrent();
   }, []); // 这里的依赖数组为空，表示只在组件首次渲染时调用一次
 
@@ -78,6 +99,11 @@ const App = () => {
     // 更新状态，将映射对象与数组保持同步
     sethistoryDivFormat(newObjectMap);
   }, [historyRecords]);
+
+  useEffect(() => {
+    console.log('useEffect country change');
+    getCurrent();
+  }, [whichhistory]); // 当keyword发生变化时调用
 
   function compareDates(dateA, dateB) {
     const [yearA, monthA, dayA] = parseDate(dateA);
@@ -115,7 +141,9 @@ const App = () => {
       year: year,
       cause: cause,
       event: event,
-      influence: influnce
+      influence: influnce,
+      important: important,
+      country: selectedCountryValue
     };
     axios.post('http://3.23.99.16:4000/history_records', postData, {
       headers: {
@@ -134,7 +162,6 @@ const App = () => {
   }
 
   function modifyHistory() {
-    console.log(eventId);
     let postData = {
       eventid: eventId,
       id: 1,
@@ -142,7 +169,9 @@ const App = () => {
       year: year,
       cause: cause,
       event: event,
-      influence: influnce
+      influence: influnce,
+      important: important,
+      country: selectedCountryValue
     };
     axios.put('http://3.23.99.16:4000/history_records', postData, {
       headers: {
@@ -150,6 +179,9 @@ const App = () => {
       }
     }).then(response => {
       setIsModalVisible(false);
+      console.log('修改');
+
+      console.log('事件 ',eventId,'重要度为 ',important);
       // 请求成功，更新state中的数据
       getCurrent();
     })
@@ -180,7 +212,6 @@ const App = () => {
   const historys = Array.from(historyDivFormat.values()).map(history => {
     const leftOrRight = history.important === 0 ? 'left' : 'right';
     const color = history.important === 0 ? 'blue' : 'red';
-    console.log(leftOrRight);
 
     const historyObject = {
       children: (
@@ -189,11 +220,27 @@ const App = () => {
           onClick={() => showModifyModal(history)}
           hoverable
         >
-          <div className="card-line"><p style={{ fontWeight: 'bold'}}>{history.EventName}</p><p></p></div>
-          <div className="card-line"><p style={{ fontWeight: 'bold'}}><div className='card-title'>年: </div></p><p>{history.EventYear}</p></div>
-          <div className="card-line"><p style={{ fontWeight: 'bold'}}><div className='card-title'>起因: </div></p><p>{history.EventCause}</p></div>
-          <div className="card-line"><p style={{ fontWeight: 'bold'}}><div className='card-title'>经过: </div></p><p>{history.Event}</p></div>
-          <div className="card-line"><p style={{ fontWeight: 'bold'}}><div className='card-title'>影响: </div></p><p>{history.EventInfluence}</p></div>
+          <div className="card-line">
+            <div style={{ fontWeight: 'bold' }}>{history.EventName}</div> <p></p>
+          </div>
+          <div className="card-line">
+            <div style={{ fontWeight: 'bold' }}> 
+              <div className='card-title'>年: </div>
+            </div> <p>{history.EventYear}</p>
+          </div>
+          <div className="card-line">
+            <div style={{ fontWeight: 'bold' }}>
+              <div className='card-title'>起因: </div> 
+            </div>  <p>{history.EventCause}</p>
+          </div>
+          <div className="card-line">
+            <div style={{ fontWeight: 'bold' }}>
+              <div className='card-title'>经过: </div>
+            </div>  <p>{history.Event}</p></div>
+          <div className="card-line">
+            <div style={{ fontWeight: 'bold' }}>
+              <div className='card-title'>影响: </div>
+            </div>  <p>{history.EventInfluence}</p></div>
         </Card>
       ),
       position: leftOrRight, // Add the 'position' property here,
@@ -203,12 +250,54 @@ const App = () => {
     return historyObject;
   });
 
+  const importantEvent = () => {
+    // setImportant(important)
+    if(important === 0){
+      setImportant(1)
+    }else{
+      setImportant(0)
+    }
+  };
+
+  const changeToChina = () => {
+    setWhichhistory('china')
+    console.log('get china history');
+  }
+
+  const changeToWorld = () => {
+    setWhichhistory('world')
+    console.log('get world history');
+  }
+
+  const changeToAll = () => {
+    setWhichhistory('All')
+    console.log('get all history');
+  }
+
+  const handleRadioChange = (e) => {
+    setSelectedCountryValue(e.target.value);
+  };
+
 
   return (
     <>
-      <div>
+
+      <Header className="header-with-background">
+        {/* 在这里添加头部内容 */}
+        <h1>海祥的历史大事年表</h1>
+      </Header>
+      <div className='btn-modal'>
         <Button type="primary" onClick={showModal}>
           新建历史事件
+        </Button>
+        <Button onClick={changeToChina} type={whichhistory === 'china' ? 'dashed' : 'default'} disabled={whichhistory === 'china'}>
+          中国历史
+        </Button>
+        <Button onClick={changeToWorld} type={whichhistory === 'world' ? 'dashed' : 'default'} disabled={whichhistory === 'world'}>
+          世界历史
+        </Button>
+        <Button onClick={changeToAll} type={whichhistory === 'All' ? 'dashed' : 'default'} disabled={whichhistory === 'All'}>
+          全历史
         </Button>
         <Modal
           title={modalTitle}
@@ -220,7 +309,11 @@ const App = () => {
             <div>
               时间: <input value={year} onChange={(e) => setYear(e.target.value)} placeholder="事情发生在几几年"></input>
               事件简称: <input value={name} onChange={(e) => setName(e.target.value)} placeholder="如 辛亥革命"></input>
-
+              <Checkbox onChange={importantEvent} checked={important === 0 ? false : true }>重要</Checkbox>
+              <Radio.Group onChange={handleRadioChange} value={selectedCountryValue}>
+                <Radio value="china">中国</Radio>
+                <Radio value="world">世界</Radio>
+              </Radio.Group>
               <div
                 style={{
                   margin: '24px 0',
