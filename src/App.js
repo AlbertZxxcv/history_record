@@ -17,6 +17,7 @@ const App = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalTitle, setModalTitle] = useState('新建历史事件')
   const [eventId, setEventID] = useState();
+  const [screenWidth] = useState(window.innerWidth)
 
   const showModal = () => {
     setModalTitle('新建历史事件');
@@ -135,7 +136,7 @@ const App = () => {
   function modifyHistory() {
     console.log(eventId);
     let postData = {
-      eventid:  eventId,
+      eventid: eventId,
       id: 1,
       name: name,
       year: year,
@@ -177,21 +178,29 @@ const App = () => {
   };
 
   const historys = Array.from(historyDivFormat.values()).map(history => {
-    const children = (
-      <Card
-        className="history-card"
-        onClick={() => showModifyModal(history)}
-        hoverable
-      >
-        <div>{history.EventName}</div>
-        <div>年: {history.EventYear}</div>
-        <div>起因: {history.EventCause}</div>
-        <div>具体内容: {history.Event}</div>
-        <div>影响: {history.EventInfluence}</div>
-      </Card>
-    );
+    const leftOrRight = history.important === 0 ? 'left' : 'right';
+    const color = history.important === 0 ? 'blue' : 'red';
+    console.log(leftOrRight);
 
-    return { children };
+    const historyObject = {
+      children: (
+        <Card
+          className={history.important === 0 ? "history-card" : "history-card-left"}
+          onClick={() => showModifyModal(history)}
+          hoverable
+        >
+          <div className="card-line"><p style={{ fontWeight: 'bold'}}>{history.EventName}</p><p></p></div>
+          <div className="card-line"><p style={{ fontWeight: 'bold'}}><div className='card-title'>年: </div></p><p>{history.EventYear}</p></div>
+          <div className="card-line"><p style={{ fontWeight: 'bold'}}><div className='card-title'>起因: </div></p><p>{history.EventCause}</p></div>
+          <div className="card-line"><p style={{ fontWeight: 'bold'}}><div className='card-title'>经过: </div></p><p>{history.Event}</p></div>
+          <div className="card-line"><p style={{ fontWeight: 'bold'}}><div className='card-title'>影响: </div></p><p>{history.EventInfluence}</p></div>
+        </Card>
+      ),
+      position: leftOrRight, // Add the 'position' property here,
+      color: color
+    };
+
+    return historyObject;
   });
 
 
@@ -226,12 +235,12 @@ const App = () => {
                 margin: '24px 0',
               }}
             />
-            {modalTitle==='新建历史事件'&&(
+            {modalTitle === '新建历史事件' && (
               <Button type="primary" onClick={addHistory}>
                 添加历史事件
               </Button>
             )}
-            {modalTitle==='修改'&&(
+            {modalTitle === '修改' && (
               <div>
                 <Button type="primary" onClick={modifyHistory}>
                   修改
@@ -244,20 +253,29 @@ const App = () => {
           </div>
         </Modal>
       </div>
-      { historys.length < 10 && (
+      {(screenWidth <= 768) && (
         <Timeline
           className='one-time-line'
           items={historys}
         />
       )}
-      { historys.length >= 10 && (
+      {(screenWidth > 768 && historys.length < 10) && (
+        <Timeline
+          className='one-time-line'
+          mode="alternate"
+          items={historys}
+        />
+      )}
+      {(screenWidth > 768 && historys.length >= 10) && (
         <div className='two-time-lines'>
           <Timeline
-            className='time-line'
+            className='two-time-line'
+            mode="alternate"
             items={historys.slice(0, Math.ceil(historys.length / 2))}
           />
           <Timeline
-            className='time-line'
+            className='two-time-line'
+            mode="alternate"
             items={historys.slice(Math.ceil(historys.length / 2))}
           />
         </div>

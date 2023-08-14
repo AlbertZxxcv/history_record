@@ -40,9 +40,10 @@
 .two-time-lines{
   display: flex;
   flex-direction: row;
+  flex: 1;
 }
 
-.time-line{
+.two-time-line{
   margin-left: 20%;
 }
 
@@ -51,5 +52,36 @@
 }
 
 .history-card{
-  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  text-align: left;
+}
+
+.history-card-left{
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  text-align: left;
+
+  background-color: red;
+  color: white;
+  width: 300px;
+  margin-right: 20%;
+}
+
+.card-line{
+  display: flex;
+  flex-direction: row;
+  margin: 0;
+  padding: 0;
+}
+
+.card-line p{
+  margin: 0;
+  padding: 0;
+}
+
+.card-title{
+  min-width: 40px;
 }
