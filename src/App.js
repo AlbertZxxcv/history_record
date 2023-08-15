@@ -321,7 +321,7 @@ const App = () => {
               />
               起因:<TextArea value={cause} onChange={(e) => setCause(e.target.value)} placeholder="想想事情为什么会发生" autoSize />
               经过:<TextArea value={event} onChange={(e) => setEvent(e.target.value)} placeholder="事情的大概经过是什么呢" autoSize />
-              结果:<TextArea value={influnce} onChange={(e) => setInflunce(e.target.value)} placeholder="事情发生后，对后续产生了什么样的影响" autoSize />
+              影响:<TextArea value={influnce} onChange={(e) => setInflunce(e.target.value)} placeholder="事情发生后，对后续产生了什么样的影响" autoSize />
             </div>
             <div
               style={{
